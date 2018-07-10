@@ -44,7 +44,7 @@ class ProfileApi constructor(
             val r = profileService.login(null,
                     jsonObject(
                             "email_address" to username,
-                            "password" to  if (password?.length > 10) password else "Address701@"
+                            "password" to  if (password?.length > 10) password else "Blabla"
                     ))
 
             r.enqueue(object : Callback<JsonObject> {
@@ -58,9 +58,6 @@ class ProfileApi constructor(
                     val responseBody = response?.body()?.toString()?:fallBack
 
                     // Debug only
-
-
-
 // {"emails":[{"email":"jiaming.yu@evbqa.com","verified":true,"primary":true}],"id":"226911043956","name":"jiaming yu","first_name":"jiaming","last_name":"yu","is_public":false,"image_id":null,"oauth_token":"5X5AWA2OFK4W3MEDOJ2X"}
 //TODO: email collection resolve
 

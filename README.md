@@ -10,6 +10,8 @@ AppDB: init DB, Entity(pojo annotated) + Dao
 
 
 ref: https://github.com/irontec/android-room-example/tree/master/app/src/main/java/com/irontec/roomexample/database
+
+
 #
 
 
