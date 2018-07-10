@@ -44,7 +44,7 @@ class ProfileApi constructor(
             val r = profileService.login(null,
                     jsonObject(
                             "email_address" to username,
-                            "password" to  if (password?.length > 10) password else "Address701@"
+                            "password" to  if (password?.length > 10) password else "Blabla"
                     ))
 
             r.enqueue(object : Callback<JsonObject> {
