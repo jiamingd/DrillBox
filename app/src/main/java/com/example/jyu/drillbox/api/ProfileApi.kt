@@ -58,9 +58,6 @@ class ProfileApi constructor(
                     val responseBody = response?.body()?.toString()?:fallBack
 
                     // Debug only
-
-
-
 // {"emails":[{"email":"jiaming.yu@evbqa.com","verified":true,"primary":true}],"id":"226911043956","name":"jiaming yu","first_name":"jiaming","last_name":"yu","is_public":false,"image_id":null,"oauth_token":"5X5AWA2OFK4W3MEDOJ2X"}
 //TODO: email collection resolve
 
