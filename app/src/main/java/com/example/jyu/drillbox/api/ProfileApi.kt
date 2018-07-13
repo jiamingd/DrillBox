@@ -66,11 +66,14 @@ class ProfileApi constructor(
                     val userProfile = RetrofitTools.gson().fromJson(responseBody, UserProfile::class.java)
 
                     //TODO: Should directly store to db
-                    val ups = AppDb.getInstance(context).userProfileDao().all
-
+                    val ups = AppDb.getInstance(context).userProfileDao().all()
 
                     AppDb.getInstance(context).userProfileDao().update( userProfile )
-                    val ups2 = AppDb.getInstance(context).userProfileDao().all
+                    val ups2 = AppDb.getInstance(context).userProfileDao().all()
+                    ups2.observeForever {
+                        Log.i("", "size of UserProfile: " + it)
+
+                    }
 
 
                 }
