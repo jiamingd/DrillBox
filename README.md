@@ -12,7 +12,8 @@ AppDB: init DB, Entity(pojo annotated) + Dao
 ref: https://github.com/irontec/android-room-example/tree/master/app/src/main/java/com/irontec/roomexample/database
 
 
-#
+# To export and open file
+adb exec-out run-as com.example.jyu.drillbox tar c databases | tar x
 
 
 

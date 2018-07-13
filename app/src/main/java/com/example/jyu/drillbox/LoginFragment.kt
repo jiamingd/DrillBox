@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import com.example.jyu.drillbox.api.ProfileApi
+import com.example.jyu.drillbox.databases.AppDb
 
 import retrofit2.Retrofit;
 
@@ -37,6 +38,13 @@ class LoginFragment() : Fragment() {
 
 
         }
+
+        val ups = AppDb.getInstance(context!!).userProfileDao().all()
+        ups.observeForever {
+            Log.i("", "size of UserProfile: ")
+
+        }
+
 
     }
 
