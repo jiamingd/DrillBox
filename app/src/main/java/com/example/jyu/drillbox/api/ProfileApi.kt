@@ -19,10 +19,11 @@ import retrofit2.http.POST
 
 
 interface ProfileService {
-    @POST("user/")
+    @POST("user")
     fun login(
+            @Header("Accept") accept: String,
             @Header("Authorization") authorizationHeader: String?,
-            @Body body: String
+            @Body body: JsonObject
     ): Call<JsonObject>
 }
 
@@ -35,12 +36,11 @@ class ProfileApi constructor(
      */
     fun login(username: String, password: String): String {
         try {
-//            val basicAuthValue = username.trim() + ":" + password.trim()
-            val basicAuthValue = "jiamingd@yahoo.com:Address701"
+            val basicAuthValue = username.trim() + ":" + password.trim()
 
             val auth = "Basic " + Base64.encodeToString(basicAuthValue.toByteArray(), Base64.NO_WRAP)  //(value.getBytes("UTF-8")
 
-            val r = profileService.login(auth, "")
+            val r = profileService.login("application/json", auth, JsonObject())
 
             r.enqueue(object : Callback<JsonObject> {
 

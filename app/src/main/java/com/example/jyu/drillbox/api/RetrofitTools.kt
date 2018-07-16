@@ -23,7 +23,7 @@ class RetrofitTools {
                     .followSslRedirects(false)
 
             return Retrofit.Builder()
-                    .baseUrl("https://api.github.com/users/")
+                    .baseUrl("https://api.github.com/")
                     .client(httpClientBuilder.build())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
