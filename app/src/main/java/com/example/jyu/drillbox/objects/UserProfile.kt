@@ -8,4 +8,7 @@ class UserProfile(id: String, var firstName: String?, var lastName: String?, var
     @PrimaryKey
     var id = id
 
+    //TODO: email collection resolve
+
+
 }
