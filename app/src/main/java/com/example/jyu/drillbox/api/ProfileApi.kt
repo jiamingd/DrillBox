@@ -4,11 +4,9 @@ import android.content.Context
 import android.util.Log
 import com.example.jyu.drillbox.databases.AppDb
 import com.example.jyu.drillbox.objects.UserProfile
-import com.example.jyu.drillbox.utils.EnumUtils
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonNull
+import com.example.jyu.drillbox.utils.JsonAssetsSource
 import com.google.gson.JsonObject
+import jsonObject
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -46,24 +44,16 @@ class ProfileApi constructor(
                             "email_address" to username,
                             "password" to  if (password?.length > 10) password else "Blabla"
                     ))
+            var userProfile: UserProfile?
 
             r.enqueue(object : Callback<JsonObject> {
                 override fun onResponse(call: Call<JsonObject>?, response: Response<JsonObject>?) {
-                    Log.i("", "")
-                    val token = response?.body()?.get("oauth_token")?.asString
+                    if (response?.code() == 503) {
+                        JsonAssetsSource.defaultUserProfile(context)
+                    }
 
-                    val fallBack = "{\"emails\":[{\"email\":\"jiaming.yu@evbqa.com\",\"verified\":true,\"primary\":true}],\"id\":\"226911043956\",\"name\":\"jiaming yu\",\"first_name\":\"jiaming\",\"last_name\":\"yu\",\"is_public\":false,\"image_id\":null,\"oauth_token\":\"5X5AWA2OFK4W3MEDOJ2X\"}"
-
-//                    val responseBody = response?.body()?:fallBack
-                    val responseBody = response?.body()?.toString()?:fallBack
-
-                    // Debug only
-// {"emails":[{"email":"jiaming.yu@evbqa.com","verified":true,"primary":true}],"id":"226911043956","name":"jiaming yu","first_name":"jiaming","last_name":"yu","is_public":false,"image_id":null,"oauth_token":"5X5AWA2OFK4W3MEDOJ2X"}
-//TODO: email collection resolve
-
-
-
-                    val userProfile = RetrofitTools.gson().fromJson(responseBody, UserProfile::class.java)
+                    val responseBody = response?.body()?.toString()
+                    userProfile = RetrofitTools.gson().fromJson(responseBody, UserProfile::class.java)
 
                     //TODO: Should directly store to db
                     val ups = AppDb.getInstance(context).userProfileDao().all()
@@ -72,70 +62,18 @@ class ProfileApi constructor(
                     val ups2 = AppDb.getInstance(context).userProfileDao().all()
                     ups2.observeForever {
                         Log.i("", "size of UserProfile: " + it)
-
                     }
-
-
                 }
 
                 override fun onFailure(call: Call<JsonObject>?, t: Throwable?) {
                     Log.i("", "")
+                    userProfile = JsonAssetsSource.defaultUserProfile(context)
                 }
             })
 
         } catch (e: Exception) {
-            val x = e
+            print("Get error in log_in")
         }
-
         return ""
     }
-
-
-    companion object {
-        @JvmStatic
-        fun buildForInjection(context: Context): ProfileApi {
-            return ProfileApi(context)
-        }
-    }
 }
-
-//TODO: Below should later be used for login device object
-fun jsonObject(vararg params: Pair<String, Any?>, includeNulls: Boolean = true): JsonObject {
-    val json = JsonObject()
-    params.forEach {
-        val key = it.first
-        val value = it.second
-        when (value) {
-            null -> if (includeNulls) json.add(key, JsonNull.INSTANCE)
-            is String -> json.addProperty(key, value)
-            is Number -> json.addProperty(key, value)
-            is Boolean -> json.addProperty(key, value)
-            is Enum<*> -> json.addProperty(key, value.serializedName)
-            is List<*> -> json.add(key, jsonArray(*value.toTypedArray()))
-            is JsonElement -> json.add(key, value)
-        // feel free to add things in here
-            else -> throw RuntimeException("bad type ${value::class}")
-        }
-    }
-    return json
-}
-
-fun jsonArray(vararg entries: Any?): JsonArray {
-    val json = JsonArray()
-    entries.forEach {
-        when (it) {
-            null -> json.add(JsonNull.INSTANCE)
-            is String -> json.add(it)
-            is Boolean -> json.add(it)
-            is Number -> json.add(it)
-            is JsonElement -> json.add(it)
-            is Enum<*> -> json.add(it.serializedName)
-        // feel free to add things in here
-            else -> throw RuntimeException("bad type ${it::class}")
-        }
-    }
-    return json
-}
-
-val Enum<*>?.serializedName: String?
-    get() = EnumUtils.getSerializedName(this)

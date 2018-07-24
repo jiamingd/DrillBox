@@ -14,5 +14,5 @@ interface UserProfileDao {
     fun add(userProfile: UserProfile)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(userProfile: UserProfile)
+    fun update(userProfile: UserProfile?)
 }
